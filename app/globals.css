@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  /* Off-white backgrounds */
+  --background: #f6f4ec;
+  --surface: #fffdf6;
+  --surface-2: #f0ede1;
+
+  /* Ink */
+  --foreground: #16211b;
+  --muted: #55635a;
+
+  /* Accent */
+  --accent: #0a8754;
+  --accent-hover: #097a4a;
+  --accent-soft: #e2f0e7;
+
+  --border: #e4e0d1;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-dm-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Squircle corners — real superellipse where supported, large radius everywhere else */
+@layer utilities {
+  .squircle {
+    border-radius: 1.75rem;
+    corner-shape: squircle;
+  }
+
+  .squircle-md {
+    border-radius: 1.15rem;
+    corner-shape: squircle;
+  }
+
+  .squircle-sm {
+    border-radius: 0.85rem;
+    corner-shape: squircle;
+  }
+
+  .squircle-pill {
+    border-radius: 999px;
+    corner-shape: squircle;
+  }
+}
