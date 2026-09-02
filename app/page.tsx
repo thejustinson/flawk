@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import ChatBotIcon from "@hugeicons/core-free-icons/ChatBotIcon";
+import ConnectIcon from "@hugeicons/core-free-icons/ConnectIcon";
+import UserGroupIcon from "@hugeicons/core-free-icons/UserGroupIcon";
+import DashboardSquareEditIcon from "@hugeicons/core-free-icons/DashboardSquareEditIcon";
 import { Faq } from "./components/faq";
 
 /* ---------------------------------- Nav ---------------------------------- */
@@ -36,7 +41,7 @@ function Nav() {
           href="/studio"
           className="squircle-sm bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
         >
-          Create an agent
+          Open Studio
         </Link>
       </nav>
     </header>
@@ -183,14 +188,21 @@ function SectionHeading({
   title,
   sub,
   badge,
+  icon,
 }: {
   kicker?: string;
   title: string;
   sub?: string;
   badge?: string;
+  icon?: IconSvgElement;
 }) {
   return (
     <div className="max-w-2xl">
+      {icon && (
+        <span className="mb-5 grid size-11 place-items-center squircle-md bg-accent-soft text-accent">
+          <HugeiconsIcon icon={icon} size={22} strokeWidth={1.8} />
+        </span>
+      )}
       <div className="flex items-center gap-3">
         {kicker && (
           <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
@@ -255,6 +267,7 @@ function StudioSection() {
   return (
     <section id="studio" className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
       <SectionHeading
+        icon={DashboardSquareEditIcon}
         kicker="Studio"
         title="Build your agents."
         sub="Create, configure, test, and publish autonomous agents from one place."
@@ -277,7 +290,7 @@ function StudioSection() {
         ))}
       </div>
 
-      <PrimaryLink href="/studio">Create an agent</PrimaryLink>
+      <PrimaryLink href="/studio">Open Studio</PrimaryLink>
     </section>
   );
 }
@@ -293,6 +306,7 @@ function ConnectSection() {
       <div className="mx-auto grid w-full max-w-6xl items-center gap-14 px-6 lg:grid-cols-[1fr_1fr]">
         <div>
           <SectionHeading
+            icon={ConnectIcon}
             kicker="Connect"
             title="Your agents don't have to stay here."
             sub="Deploy your agents wherever you work through REST and MCP."
@@ -369,6 +383,7 @@ function OrganizationsSection() {
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.9fr]">
           <div>
             <SectionHeading
+              icon={UserGroupIcon}
               kicker="Organizations"
               badge="Coming soon"
               title="Build more than one agent. Build an organization."
@@ -412,9 +427,11 @@ function OrgConstellation() {
       {nodes.map((n, i) => (
         <span
           key={i}
-          className="flawk-pulse absolute size-9 -translate-x-1/2 -translate-y-1/2 squircle-sm border border-border bg-surface"
+          className="flawk-pulse absolute grid size-10 -translate-x-1/2 -translate-y-1/2 place-items-center squircle-sm border border-border bg-surface text-muted"
           style={{ left: `${n.x}%`, top: `${n.y}%` }}
-        />
+        >
+          <HugeiconsIcon icon={ChatBotIcon} size={18} strokeWidth={1.8} />
+        </span>
       ))}
       <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center squircle-sm bg-accent text-white font-bold">
         F
@@ -535,35 +552,22 @@ function FaqSection() {
   );
 }
 
-/* ------------------------------ Vision + CTA ------------------------------ */
-
-function VisionStrip() {
-  return (
-    <section className="mx-auto w-full max-w-6xl px-6 py-14">
-      <p className="mx-auto max-w-3xl text-center text-2xl font-semibold tracking-tight sm:text-3xl">
-        We&rsquo;re building toward a world of autonomous workers.
-      </p>
-      <p className="mx-auto mt-4 max-w-xl text-center text-[15px] leading-relaxed text-muted">
-        Today, create and deploy your agents. Tomorrow, they can become part of
-        something much bigger.
-      </p>
-    </section>
-  );
-}
+/* ------------------------------- Final CTA ------------------------------- */
 
 function FinalCta() {
   return (
     <section className="mx-auto w-full max-w-6xl px-6 pb-24 pt-6">
-      <div className="squircle bg-accent px-8 py-16 text-center text-white md:px-16 md:py-20">
-        <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          Your first agent is waiting to be built.
+      <div className="squircle bg-accent px-8 py-16 text-center text-white md:px-16 md:py-24">
+        <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-[2.75rem] md:leading-[1.1]">
+          We&rsquo;re building toward a world of autonomous workers.
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/80">
-          Create it in Studio. Put it to work with Flawk.
+        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/80">
+          Today, create and deploy your agents. Tomorrow, they can become part of
+          something much bigger.
         </p>
         <Link
           href="/studio"
-          className="mt-8 inline-block squircle-sm bg-white px-6 py-3.5 text-sm font-semibold text-accent transition-colors hover:bg-white/90"
+          className="mt-9 inline-block squircle-sm bg-white px-6 py-3.5 text-sm font-semibold text-accent transition-colors hover:bg-white/90"
         >
           Open Studio
         </Link>
@@ -603,7 +607,7 @@ function Footer() {
           <FooterCol
             title="Start"
             links={[
-              ["Create an agent", "/studio"],
+              ["Open Studio", "/studio"],
               ["Explore agents", "/agents"],
             ]}
           />
@@ -659,7 +663,6 @@ export default function Home() {
         <WhyFlawk />
         <Workflow />
         <FaqSection />
-        <VisionStrip />
         <FinalCta />
       </main>
       <Footer />
