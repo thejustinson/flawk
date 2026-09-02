@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import ChatBotIcon from "@hugeicons/core-free-icons/ChatBotIcon";
@@ -13,9 +14,14 @@ function Nav() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur">
       <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid size-8 place-items-center squircle-sm bg-accent text-white font-bold">
-            F
-          </span>
+          <Image
+            src="/flawk.png"
+            alt="Flawk"
+            width={28}
+            height={28}
+            className="size-7"
+            priority
+          />
           <span className="text-lg font-semibold tracking-tight">Flawk</span>
         </Link>
 
@@ -31,9 +37,6 @@ function Nav() {
             className="transition-colors hover:text-foreground"
           >
             Organizations
-          </a>
-          <a href="#faq" className="transition-colors hover:text-foreground">
-            FAQ
           </a>
         </div>
 
@@ -326,8 +329,8 @@ function DeployDiagram() {
     <div className="squircle border border-border bg-surface p-8">
       <div className="mx-auto flex max-w-xs flex-col items-center">
         <div className="flex items-center gap-3 squircle-md border border-border bg-surface-2/60 px-4 py-3">
-          <span className="grid size-8 place-items-center squircle-sm bg-accent text-white font-bold text-sm">
-            F
+          <span className="grid size-8 place-items-center squircle-sm border border-border bg-surface">
+            <Image src="/flawk.png" alt="" width={18} height={18} className="size-4.5" />
           </span>
           <span className="text-sm font-semibold">Your Flawk agent</span>
         </div>
@@ -386,7 +389,7 @@ function OrganizationsSection() {
               icon={UserGroupIcon}
               kicker="Organizations"
               badge="Coming soon"
-              title="Build more than one agent. Build an organization."
+              title="Employ more than one agent. Build an organization."
               sub="The future of Flawk is a world where specialized agents can work together as coordinated autonomous teams."
             />
           </div>
@@ -433,8 +436,8 @@ function OrgConstellation() {
           <HugeiconsIcon icon={ChatBotIcon} size={18} strokeWidth={1.8} />
         </span>
       ))}
-      <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center squircle-sm bg-accent text-white font-bold">
-        F
+      <span className="absolute left-1/2 top-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center squircle-md border border-border bg-surface shadow-[0_10px_24px_-10px_rgba(22,33,27,0.35)] ring-4 ring-accent-soft">
+        <Image src="/flawk.png" alt="Flawk" width={26} height={26} className="size-6.5" />
       </span>
     </div>
   );
@@ -584,9 +587,13 @@ function Footer() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14 md:flex-row md:justify-between">
         <div className="max-w-xs">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-8 place-items-center squircle-sm bg-accent text-white font-bold">
-              F
-            </span>
+            <Image
+              src="/flawk.png"
+              alt="Flawk"
+              width={28}
+              height={28}
+              className="size-7"
+            />
             <span className="text-lg font-semibold tracking-tight">Flawk</span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted">
