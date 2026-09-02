@@ -15,14 +15,17 @@ function Nav() {
         </Link>
 
         <div className="hidden items-center gap-8 text-sm text-muted md:flex">
-          <a href="#products" className="transition-colors hover:text-foreground">
-            Products
+          <a href="#studio" className="transition-colors hover:text-foreground">
+            Studio
           </a>
-          <a href="#how" className="transition-colors hover:text-foreground">
-            How it works
+          <a href="#connect" className="transition-colors hover:text-foreground">
+            Connect
           </a>
-          <a href="#principles" className="transition-colors hover:text-foreground">
-            Principles
+          <a
+            href="#organizations"
+            className="transition-colors hover:text-foreground"
+          >
+            Organizations
           </a>
           <a href="#faq" className="transition-colors hover:text-foreground">
             FAQ
@@ -33,7 +36,7 @@ function Nav() {
           href="/studio"
           className="squircle-sm bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
         >
-          Open Studio
+          Create an agent
         </Link>
       </nav>
     </header>
@@ -44,274 +47,413 @@ function Nav() {
 
 function Hero() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
-      <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
-          <span className="inline-flex items-center gap-2 squircle-pill border border-border bg-surface px-3.5 py-1.5 text-xs font-medium text-muted">
-            <span className="size-1.5 rounded-full bg-accent" />
-            Phase 1 · Studio + Connect
-          </span>
+    <section className="relative overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_46%_at_50%_-4%,rgba(10,135,84,0.12),transparent)]"
+      />
+      <div className="relative mx-auto w-full max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
+        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1fr]">
+          <div>
+            <span className="inline-flex items-center gap-2 squircle-pill border border-border bg-surface px-3.5 py-1.5 text-xs font-medium text-muted">
+              <span className="size-1.5 rounded-full bg-accent" />
+              Studio + Connect are live
+            </span>
 
-          <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
-            Create, own, and deploy autonomous AI agents.
-          </h1>
+            <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-[3.5rem]">
+              Create, own, and deploy autonomous AI agents.
+            </h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Flawk is infrastructure for building agents as configured data — not
-            code. Define an agent in Studio, publish a version, and call it from
-            anywhere over REST or MCP. Every limit is enforced in code. Every run
-            is logged.
-          </p>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
+              Flawk gives you the infrastructure to build agents in Studio and
+              deploy them anywhere through REST and MCP.
+            </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/studio"
-              className="squircle-sm bg-accent px-6 py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
-            >
-              Open Studio
-            </Link>
-            <a
-              href="#how"
-              className="squircle-sm border border-border bg-surface px-6 py-3.5 text-center text-sm font-semibold text-foreground transition-colors hover:bg-surface-2"
-            >
-              See how it works
-            </a>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/studio"
+                className="squircle-sm bg-accent px-6 py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+              >
+                Open Studio
+              </Link>
+              <Link
+                href="/agents"
+                className="squircle-sm border border-border bg-surface px-6 py-3.5 text-center text-sm font-semibold text-foreground transition-colors hover:bg-surface-2"
+              >
+                Explore Agents
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <SkillCard />
+          <StudioPreview />
+        </div>
       </div>
     </section>
   );
 }
 
-function SkillCard() {
+/* Product preview: create in Studio, publish, deploy out. Not an example agent. */
+function StudioPreview() {
   return (
-    <div className="squircle border border-border bg-surface p-6 shadow-[0_24px_60px_-30px_rgba(22,33,27,0.35)]">
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-2 text-sm font-medium text-muted">
-          <span className="grid size-6 place-items-center squircle-sm bg-accent-soft text-accent text-xs font-bold">
-            R
+    <div className="squircle border border-border bg-surface p-3 shadow-[0_30px_70px_-32px_rgba(22,33,27,0.4)]">
+      <div className="squircle-md bg-surface-2/70 p-5">
+        {/* window bar */}
+        <div className="flex items-center gap-2">
+          <span className="size-2.5 rounded-full bg-border" />
+          <span className="size-2.5 rounded-full bg-border" />
+          <span className="size-2.5 rounded-full bg-border" />
+          <span className="ml-2 text-xs font-medium text-muted">
+            Flawk Studio
           </span>
-          researchbot / SKILL.md
-        </div>
-        <span className="squircle-pill bg-accent-soft px-2.5 py-1 text-[11px] font-semibold text-accent">
-          v0.1 · published
-        </span>
-      </div>
-
-      <dl className="mt-5 space-y-4 text-sm">
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Purpose
-          </dt>
-          <dd className="mt-1 text-foreground">
-            Summarize any URL into five bullet points.
-          </dd>
         </div>
 
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Can
-          </dt>
-          <dd className="mt-1.5 flex flex-wrap gap-1.5">
-            {["fetch_url", "summarize"].map((t) => (
+        {/* step rail */}
+        <div className="mt-5 flex items-center gap-1.5 text-[11px] font-medium">
+          {["Create", "Configure", "Test", "Publish"].map((s, i) => (
+            <div key={s} className="flex flex-1 items-center gap-1.5">
               <span
-                key={t}
-                className="squircle-sm bg-accent-soft px-2.5 py-1 font-mono text-xs text-accent"
+                className={`w-full rounded-full px-2 py-1 text-center ${
+                  i === 3
+                    ? "bg-accent text-white"
+                    : "bg-surface text-muted border border-border"
+                }`}
               >
-                {t}
+                {s}
               </span>
-            ))}
-          </dd>
+            </div>
+          ))}
         </div>
 
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Cannot
-          </dt>
-          <dd className="mt-1.5 flex items-center justify-between gap-3 squircle-sm border border-border bg-surface-2 px-3 py-2">
-            <span className="font-mono text-xs text-foreground">
-              spend &gt; $0.05 / task
+        {/* agent card */}
+        <div className="mt-5 flex items-center justify-between squircle-md border border-border bg-surface p-4">
+          <div className="flex items-center gap-3">
+            <span className="grid size-10 place-items-center squircle-sm bg-accent-soft">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path
+                  d="M9 1.5 11 6l4.5 2L11 10l-2 4.5L7 10 2.5 8 7 6 9 1.5Z"
+                  fill="currentColor"
+                  className="text-accent"
+                />
+              </svg>
             </span>
-            <span className="squircle-pill bg-foreground px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-              enforced in code
-            </span>
-          </dd>
+            <div>
+              <div className="text-sm font-semibold">Your agent</div>
+              <div className="text-xs text-muted">Draft</div>
+            </div>
+          </div>
+          <span className="squircle-sm bg-accent px-3 py-1.5 text-xs font-semibold text-white">
+            Publish
+          </span>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border pt-4">
-          <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Price
-          </dt>
-          <dd className="font-mono text-sm font-semibold text-foreground">
-            $0.02 / task
-          </dd>
+        {/* deploy fan-out */}
+        <div className="mt-5">
+          <div className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+            Deploy
+          </div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className="squircle-sm border border-border bg-surface px-2.5 py-1 text-xs font-medium">
+              REST
+            </span>
+            <span className="squircle-sm border border-border bg-surface px-2.5 py-1 text-xs font-medium">
+              MCP
+            </span>
+            <span className="h-px flex-1 bg-border" />
+            <div className="flex gap-1.5">
+              {["App", "Backend", "AI tools"].map((d) => (
+                <span
+                  key={d}
+                  className="squircle-sm bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
+                >
+                  {d}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
-      </dl>
+      </div>
     </div>
   );
 }
 
-/* ------------------------------- Products ------------------------------- */
+/* ------------------------------ Shared bits ------------------------------ */
 
-const PRODUCTS = [
-  {
-    name: "Flawk Studio",
-    tagline: "Create & own agents",
-    body: "Build an agent from a structured SKILL.md — purpose, Can/Cannot, inputs and outputs, price, and a hard cost cap. Publish immutable, versioned releases.",
-    status: "Available now",
-    live: true,
-  },
-  {
-    name: "Flawk Connect",
-    tagline: "Use agents anywhere",
-    body: "One REST endpoint and an MCP server wrapping the same runner. Call your agents from Claude Code, Cursor, or your own backend with an API key.",
-    status: "Available now",
-    live: true,
-  },
-  {
-    name: "Flawk Organizations",
-    tagline: "Autonomous orgs that employ agents",
-    body: "Treasury and governance for organizations that are run by agents rather than people. Not part of this phase — on the roadmap.",
-    status: "Later",
-    live: false,
-  },
-];
-
-function Products() {
+function SectionHeading({
+  kicker,
+  title,
+  sub,
+  badge,
+}: {
+  kicker?: string;
+  title: string;
+  sub?: string;
+  badge?: string;
+}) {
   return (
-    <section id="products" className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
-      <SectionHeading
-        kicker="Three products"
-        title="One platform for the whole agent lifecycle"
-        sub="Create them, then put them to work. This phase ships the first two."
-      />
-
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {PRODUCTS.map((p) => (
-          <div
-            key={p.name}
-            className="flex flex-col squircle border border-border bg-surface p-7"
-          >
-            <div className="flex items-center justify-between">
-              <span
-                className={`squircle-pill px-2.5 py-1 text-[11px] font-semibold ${
-                  p.live
-                    ? "bg-accent-soft text-accent"
-                    : "bg-surface-2 text-muted"
-                }`}
-              >
-                {p.status}
-              </span>
-            </div>
-            <h3 className="mt-5 text-xl font-semibold tracking-tight">
-              {p.name}
-            </h3>
-            <p className="mt-1 text-sm font-medium text-accent">{p.tagline}</p>
-            <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              {p.body}
-            </p>
-          </div>
-        ))}
+    <div className="max-w-2xl">
+      <div className="flex items-center gap-3">
+        {kicker && (
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+            {kicker}
+          </span>
+        )}
+        {badge && (
+          <span className="squircle-pill bg-foreground px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+            {badge}
+          </span>
+        )}
       </div>
-    </section>
+      <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+        {title}
+      </h2>
+      {sub && (
+        <p className="mt-4 text-lg leading-relaxed text-muted">{sub}</p>
+      )}
+    </div>
   );
 }
 
-/* ------------------------------ How it works ------------------------------ */
+function PrimaryLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="mt-8 inline-block squircle-sm bg-accent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+    >
+      {children}
+    </Link>
+  );
+}
 
-const STEPS = [
-  {
-    n: "01",
-    title: "Define",
-    body: "Fill in the Studio form: identity, the Can and Cannot lists, inputs and outputs, a price per task, and a cost cap.",
-  },
+/* -------------------------------- Studio -------------------------------- */
+
+const STUDIO_STEPS = [
+  { n: "01", title: "Create", body: "Start a new agent and name what it does." },
   {
     n: "02",
-    title: "Publish",
-    body: "A draft becomes a published, immutable version with its own ID. Edits later create a new version, never a mutation.",
+    title: "Configure",
+    body: "Give it inputs, outputs, limits, and a price.",
   },
   {
     n: "03",
-    title: "Connect",
-    body: "Call POST /agents/:slug/run with an API key, or point an MCP client at the server. Same runner underneath.",
+    title: "Test",
+    body: "Run it against real inputs before anyone else can.",
   },
   {
     n: "04",
-    title: "Review",
-    body: "Read every run back with its input, output, tool-call log, and the exact cost it incurred.",
+    title: "Publish",
+    body: "Turn it into a version people can actually call.",
   },
 ];
 
-function HowItWorks() {
+function StudioSection() {
+  return (
+    <section id="studio" className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
+      <SectionHeading
+        kicker="Studio"
+        title="Build your agents."
+        sub="Create, configure, test, and publish autonomous agents from one place."
+      />
+
+      <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {STUDIO_STEPS.map((s) => (
+          <div
+            key={s.n}
+            className="squircle border border-border bg-surface p-7 transition-transform hover:-translate-y-0.5"
+          >
+            <span className="font-mono text-sm font-semibold text-accent">
+              {s.n}
+            </span>
+            <h3 className="mt-3 text-lg font-semibold tracking-tight">
+              {s.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <PrimaryLink href="/studio">Create an agent</PrimaryLink>
+    </section>
+  );
+}
+
+/* -------------------------------- Connect -------------------------------- */
+
+function ConnectSection() {
   return (
     <section
-      id="how"
+      id="connect"
       className="border-y border-border bg-surface-2/50 py-20 md:py-28"
     >
-      <div className="mx-auto w-full max-w-6xl px-6">
-        <SectionHeading
-          kicker="How it works"
-          title="From form fields to a callable agent"
-          sub="No hardcoding anywhere. An agent is a row in the database, defined only through Studio."
-        />
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-14 px-6 lg:grid-cols-[1fr_1fr]">
+        <div>
+          <SectionHeading
+            kicker="Connect"
+            title="Your agents don't have to stay here."
+            sub="Deploy your agents wherever you work through REST and MCP."
+          />
+          <PrimaryLink href="/connect">Explore Connect</PrimaryLink>
+        </div>
 
-        <ol className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((s) => (
-            <li
-              key={s.n}
-              className="squircle border border-border bg-surface p-7"
-            >
-              <span className="font-mono text-sm font-semibold text-accent">
-                {s.n}
-              </span>
-              <h3 className="mt-3 text-lg font-semibold tracking-tight">
-                {s.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
-            </li>
-          ))}
-        </ol>
+        <DeployDiagram />
       </div>
     </section>
   );
 }
 
-/* ------------------------------ Principles ------------------------------ */
+function DeployDiagram() {
+  const targets = ["Your app", "Your backend", "AI tools"];
+  return (
+    <div className="squircle border border-border bg-surface p-8">
+      <div className="mx-auto flex max-w-xs flex-col items-center">
+        <div className="flex items-center gap-3 squircle-md border border-border bg-surface-2/60 px-4 py-3">
+          <span className="grid size-8 place-items-center squircle-sm bg-accent text-white font-bold text-sm">
+            F
+          </span>
+          <span className="text-sm font-semibold">Your Flawk agent</span>
+        </div>
 
-const PRINCIPLES = [
+        <svg
+          width="100%"
+          height="56"
+          viewBox="0 0 240 56"
+          fill="none"
+          className="text-border"
+        >
+          <path
+            d="M120 0v14M120 14C120 30 40 26 40 52M120 14c0 22 0 22 0 38M120 14c0 16 80 12 80 38"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          <path
+            d="M120 0v14M120 14C120 30 40 26 40 52M120 14c0 22 0 22 0 38M120 14c0 16 80 12 80 38"
+            stroke="var(--accent)"
+            strokeWidth="1.5"
+            className="flawk-flow"
+          />
+        </svg>
+
+        <div className="grid w-full grid-cols-3 gap-2">
+          {targets.map((t) => (
+            <span
+              key={t}
+              className="squircle-sm bg-accent-soft px-2 py-2 text-center text-xs font-medium text-accent"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <p className="mt-8 text-center text-sm text-muted">
+        Build here. Use anywhere.
+      </p>
+    </div>
+  );
+}
+
+/* ----------------------------- Organizations ----------------------------- */
+
+function OrganizationsSection() {
+  return (
+    <section
+      id="organizations"
+      className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28"
+    >
+      <div className="squircle border border-border bg-[radial-gradient(ellipse_70%_100%_at_100%_0%,rgba(10,135,84,0.10),transparent)] bg-surface p-8 md:p-14">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.9fr]">
+          <div>
+            <SectionHeading
+              kicker="Organizations"
+              badge="Coming soon"
+              title="Build more than one agent. Build an organization."
+              sub="The future of Flawk is a world where specialized agents can work together as coordinated autonomous teams."
+            />
+          </div>
+
+          <OrgConstellation />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function OrgConstellation() {
+  const nodes = [
+    { x: 50, y: 18 },
+    { x: 18, y: 44 },
+    { x: 82, y: 42 },
+    { x: 32, y: 80 },
+    { x: 70, y: 82 },
+  ];
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-xs">
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute inset-0 h-full w-full text-border"
+      >
+        {nodes.map((n, i) => (
+          <line
+            key={i}
+            x1="50"
+            y1="50"
+            x2={n.x}
+            y2={n.y}
+            stroke="currentColor"
+            strokeWidth="0.6"
+          />
+        ))}
+      </svg>
+      {nodes.map((n, i) => (
+        <span
+          key={i}
+          className="flawk-pulse absolute size-9 -translate-x-1/2 -translate-y-1/2 squircle-sm border border-border bg-surface"
+          style={{ left: `${n.x}%`, top: `${n.y}%` }}
+        />
+      ))}
+      <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center squircle-sm bg-accent text-white font-bold">
+        F
+      </span>
+    </div>
+  );
+}
+
+/* ------------------------------- Why Flawk ------------------------------- */
+
+const WHY = [
   {
-    title: "Enforced in code",
-    body: "A cost cap is a hard counter in the runner that stops tool calls at the limit — not a line in a system prompt the model is trusted to respect.",
+    title: "Built to be deployed",
+    body: "Create agents that move beyond a demo and into real workflows.",
   },
   {
     title: "Versioned by default",
-    body: "Editing an agent creates a new version. Integrations that pinned to a version keep running on it, untouched.",
+    body: "Publish with confidence and always know what you're running.",
   },
   {
-    title: "Every run logged",
-    body: "Input, output, tool calls, cost, and outcome — captured from the first run. This is the data reputation is built on.",
+    title: "Built for visibility",
+    body: "See what your agents are doing and how they're performing.",
   },
   {
-    title: "No autonomous spend",
-    body: "Every paid task is triggered by a human or an authenticated org. Agents don't decide to spend money, and they don't hire other agents.",
+    title: "Ready to connect",
+    body: "Use your agents from your own software and AI tools.",
   },
 ];
 
-function Principles() {
+function WhyFlawk() {
   return (
-    <section
-      id="principles"
-      className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28"
-    >
+    <section id="why" className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
       <SectionHeading
-        kicker="Design principles"
-        title="Guardrails that don't depend on the model behaving"
+        kicker="Why Flawk"
+        title="Infrastructure for agents you actually want to run."
       />
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2">
-        {PRINCIPLES.map((p) => (
+        {WHY.map((p) => (
           <div
             key={p.title}
             className="flex gap-4 squircle border border-border bg-surface p-7"
@@ -340,36 +482,84 @@ function Principles() {
   );
 }
 
-/* --------------------------------- FAQ --------------------------------- */
+/* ------------------------------- Workflow ------------------------------- */
 
-function FaqSection() {
+const FLOW = [
+  { n: "01", title: "Create", body: "Build your agent in Studio." },
+  { n: "02", title: "Configure", body: "Give it everything it needs to do its job." },
+  { n: "03", title: "Publish", body: "Turn your agent into a usable version." },
+  { n: "04", title: "Deploy", body: "Use it anywhere through Flawk Connect." },
+];
+
+function Workflow() {
   return (
     <section
-      id="faq"
-      className="border-t border-border bg-surface-2/50 py-20 md:py-28"
+      id="workflow"
+      className="border-y border-border bg-surface-2/50 py-20 md:py-28"
     >
-      <div className="mx-auto w-full max-w-3xl px-6">
-        <SectionHeading kicker="FAQ" title="Questions worth answering up front" />
-        <div className="mt-12">
-          <Faq />
-        </div>
+      <div className="mx-auto w-full max-w-6xl px-6">
+        <SectionHeading
+          kicker="The workflow"
+          title="From idea to deployed agent."
+          sub="There isn't much between you and an agent that's running."
+        />
+
+        <ol className="mt-12 grid gap-px overflow-hidden squircle border border-border bg-border md:grid-cols-4">
+          {FLOW.map((s) => (
+            <li key={s.n} className="bg-surface p-7">
+              <span className="font-mono text-sm font-semibold text-accent">
+                {s.n}
+              </span>
+              <h3 className="mt-3 text-lg font-semibold tracking-tight">
+                {s.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
 }
 
-/* --------------------------------- CTA --------------------------------- */
+/* --------------------------------- FAQ --------------------------------- */
 
-function Cta() {
+function FaqSection() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 py-24">
+    <section id="faq" className="mx-auto w-full max-w-3xl px-6 py-20 md:py-28">
+      <SectionHeading kicker="FAQ" title="Before you build your first one" />
+      <div className="mt-12">
+        <Faq />
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ Vision + CTA ------------------------------ */
+
+function VisionStrip() {
+  return (
+    <section className="mx-auto w-full max-w-6xl px-6 py-14">
+      <p className="mx-auto max-w-3xl text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+        We&rsquo;re building toward a world of autonomous workers.
+      </p>
+      <p className="mx-auto mt-4 max-w-xl text-center text-[15px] leading-relaxed text-muted">
+        Today, create and deploy your agents. Tomorrow, they can become part of
+        something much bigger.
+      </p>
+    </section>
+  );
+}
+
+function FinalCta() {
+  return (
+    <section className="mx-auto w-full max-w-6xl px-6 pb-24 pt-6">
       <div className="squircle bg-accent px-8 py-16 text-center text-white md:px-16 md:py-20">
         <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          Build your first agent in Studio.
+          Your first agent is waiting to be built.
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/80">
-          Nothing here works until an agent exists — and the only way to make one
-          is the Studio flow. Start there.
+          Create it in Studio. Put it to work with Flawk.
         </p>
         <Link
           href="/studio"
@@ -403,28 +593,21 @@ function Footer() {
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
           <FooterCol
-            title="Products"
+            title="Product"
             links={[
               ["Studio", "/studio"],
-              ["Connect", "#products"],
-              ["Organizations", "#products"],
+              ["Connect", "#connect"],
+              ["Organizations", "#organizations"],
             ]}
           />
           <FooterCol
-            title="Platform"
+            title="Start"
             links={[
-              ["How it works", "#how"],
-              ["Principles", "#principles"],
-              ["FAQ", "#faq"],
+              ["Create an agent", "/studio"],
+              ["Explore agents", "/agents"],
             ]}
           />
-          <FooterCol
-            title="Resources"
-            links={[
-              ["Docs", "/docs"],
-              ["API reference", "/docs"],
-            ]}
-          />
+          <FooterCol title="Resources" links={[["Docs", "/docs"]]} />
         </div>
       </div>
 
@@ -452,41 +635,12 @@ function FooterCol({
       <ul className="mt-3 space-y-2 text-sm text-muted">
         {links.map(([label, href]) => (
           <li key={label}>
-            <Link
-              href={href}
-              className="transition-colors hover:text-foreground"
-            >
+            <Link href={href} className="transition-colors hover:text-foreground">
               {label}
             </Link>
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-/* ----------------------------- Shared bits ----------------------------- */
-
-function SectionHeading({
-  kicker,
-  title,
-  sub,
-}: {
-  kicker: string;
-  title: string;
-  sub?: string;
-}) {
-  return (
-    <div className="max-w-2xl">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-        {kicker}
-      </span>
-      <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-        {title}
-      </h2>
-      {sub && (
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">{sub}</p>
-      )}
     </div>
   );
 }
@@ -499,11 +653,14 @@ export default function Home() {
       <Nav />
       <main className="flex-1">
         <Hero />
-        <Products />
-        <HowItWorks />
-        <Principles />
+        <StudioSection />
+        <ConnectSection />
+        <OrganizationsSection />
+        <WhyFlawk />
+        <Workflow />
         <FaqSection />
-        <Cta />
+        <VisionStrip />
+        <FinalCta />
       </main>
       <Footer />
     </div>

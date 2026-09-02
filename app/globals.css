@@ -48,6 +48,34 @@ body {
   color: #fff;
 }
 
+/* Subtle motion — respects reduced-motion preferences */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes flawk-pulse {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes flawk-dash {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+
+  .flawk-pulse {
+    animation: flawk-pulse 2.6s ease-in-out infinite;
+  }
+
+  .flawk-flow {
+    stroke-dasharray: 4 8;
+    animation: flawk-dash 1.4s linear infinite;
+  }
+}
+
 /* Squircle corners — real superellipse where supported, large radius everywhere else */
 @layer utilities {
   .squircle {

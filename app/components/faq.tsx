@@ -4,28 +4,48 @@ import { useState } from "react";
 
 const ITEMS: { q: string; a: string }[] = [
   {
-    q: "Where does an agent's definition live?",
-    a: "In the database. Nothing about an agent is hardcoded — its identity, skill, permissions, and pricing are all configured data, editable only through the Studio flow. There is no seed script and no example agent baked into the code.",
+    q: "What can I build with Flawk?",
+    a: "Specialized autonomous agents for the tasks and workflows you keep wishing were handled for you. You define what each one does; Flawk gives you the place to create it and the way to run it.",
   },
   {
-    q: "What does \"enforced in code\" mean?",
-    a: "An agent's SKILL.md has a Cannot section, e.g. \"cannot spend more than $2 per task.\" The runner enforces that with a hard counter that stops tool calls once the cap is hit — regardless of what the model decides mid-task. The prompt is never the thing holding the line.",
+    q: "Do I need to know how to code?",
+    a: "No. Creating an agent in Studio is a guided flow, not an infrastructure project. Code helps when you're wiring an agent deep into your own software, but it isn't required to create, publish, or deploy one.",
   },
   {
-    q: "Which model runs the agents?",
-    a: "Agent runtime calls go through the Gemini API. The provider sits behind a thin interface so it can be swapped later, but Phase 1 is Gemini only.",
+    q: "Can I use my agents outside Flawk?",
+    a: "Yes — that's the point. Every agent you publish is reachable over REST and MCP, so you can drop it into your app, your backend, or an AI tool like Claude Code or Cursor without rebuilding anything.",
   },
   {
-    q: "Can agents hire or pay each other?",
-    a: "No. Every paid task in this phase is triggered by a human or an authenticated organization. Agent-to-agent hiring and autonomous payment are out of scope.",
+    q: "Can I create more than one agent?",
+    a: "Yes. Most people end up with a small set of focused agents, each doing one job well, rather than a single agent that tries to do everything.",
   },
   {
-    q: "What happens when I edit a published agent?",
-    a: "You get a new version. Published versions are immutable, so integrations that pinned to a version keep working exactly as before.",
+    q: "Can I edit an agent after creating it?",
+    a: "Yes. You keep editing and testing a draft as much as you want. Publishing turns the current state into a stable version, so anything already calling your agent keeps working while you iterate on the next one.",
   },
   {
-    q: "What gets logged on a run?",
-    a: "Input, output, every tool call, the cost incurred, and success or failure — written from the very first run. That log is the raw material for agent reputation later.",
+    q: "Do I own the agents I create?",
+    a: "Yes. The agents you create in Studio are yours — how they're configured, how they're versioned, and how they're used. Flawk is the infrastructure they run on, not the owner of what you build.",
+  },
+  {
+    q: "Is Flawk just another AI chatbot builder?",
+    a: "No. Flawk is built around agents you deploy and call from real systems, not a chat window you talk to inside one app. The output is something that runs, not a conversation.",
+  },
+  {
+    q: "How long does it take to create an agent?",
+    a: "The flow is built to get you from an idea to a working, published agent in one sitting. Configuring and testing is where you'll spend your time, not setup.",
+  },
+  {
+    q: "Who is Flawk for?",
+    a: "Developers, founders, and teams who want to put AI agents to work in real products and workflows — anyone who'd rather build the agent than build the platform underneath it.",
+  },
+  {
+    q: "Why create an agent on Flawk instead of building one myself?",
+    a: "You could build the infrastructure yourself. Flawk exists so you don't have to — creation, testing, publishing, versioning, and deployment over REST and MCP are already handled.",
+  },
+  {
+    q: "When will Organizations be available?",
+    a: "Organizations are part of Flawk's future direction. Today, Flawk focuses on helping you create, publish, and deploy individual agents. Organizations will come later as the platform evolves.",
   },
 ];
 
