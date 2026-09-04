@@ -10,6 +10,7 @@ import { agents, agentVersions } from "@/lib/db/schema";
 import { buildSkillMd, looksLikeSolanaAddress, slugify } from "@/lib/skill";
 import { nextVersion } from "@/lib/agents/versioning";
 import { llm, type AgentDraft } from "@/lib/llm";
+import { runAgent, type StopReason, type ToolCallLog } from "@/lib/runner/run";
 
 export type AgentFormState = { error?: string };
 
@@ -220,6 +221,59 @@ export async function saveAgentEdit(
 
   revalidatePath(`/studio/${agent.slug}`);
   redirect(`/studio/${agent.slug}`);
+}
+
+export type TestRunResult = {
+  runId: string;
+  output: string;
+  success: boolean;
+  cost: number;
+  stopReason: StopReason;
+  toolCalls: ToolCallLog[];
+};
+export type TestRunState = { error?: string; result?: TestRunResult };
+
+/** Run the serving (latest published) version against an input, from Studio. */
+export async function testRunAgent(
+  _prev: TestRunState,
+  formData: FormData,
+): Promise<TestRunState> {
+  const { user, hasAccess } = await requireStudioAuth();
+  if (!hasAccess) return { error: "You don't have Studio access." };
+  const account = await getOrCreateAccount(user);
+
+  const agentId = String(formData.get("agentId") ?? "");
+  const input = String(formData.get("input") ?? "").trim();
+  if (!input) return { error: "Enter an input to test with." };
+
+  const agent = await db.query.agents.findFirst({
+    where: eq(agents.id, agentId),
+    with: { versions: { orderBy: (v, { asc }) => asc(v.createdAt) } },
+  });
+  if (!agent || agent.creatorId !== account.id) {
+    return { error: "Agent not found." };
+  }
+
+  const serving = [...agent.versions]
+    .reverse()
+    .find((v) => v.status === "published");
+  if (!serving) return { error: "Publish a version before test-running." };
+
+  try {
+    const r = await runAgent({ version: serving, input });
+    return {
+      result: {
+        runId: r.runId,
+        output: r.output,
+        success: r.success,
+        cost: r.costIncurred,
+        stopReason: r.stopReason,
+        toolCalls: r.toolCalls,
+      },
+    };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Run failed." };
+  }
 }
 
 async function loadOwnedVersion(versionId: string) {

@@ -9,6 +9,7 @@ import {
   archiveAgentVersion,
   publishAgentVersion,
 } from "@/lib/agents/actions";
+import { TestPanel } from "./test-panel";
 
 const STATUS_STYLES: Record<VersionStatus, string> = {
   draft: "bg-surface-2 text-muted",
@@ -118,6 +119,8 @@ export default async function AgentDetailPage({
               {latest.skillMd}
             </pre>
           </section>
+
+          {serving && <TestPanel agentId={agent.id} />}
 
           <section className="mt-8">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">

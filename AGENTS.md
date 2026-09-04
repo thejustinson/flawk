@@ -5,12 +5,15 @@ This file orients Claude Code (or any coding agent) working on this repo. Read i
 ## Current status (2026-09)
 
 - **Landing page:** done (`app/page.tsx`, DM Sans + `#0A8754`, squircle UI).
-- **Studio:** foundation only. In place — Drizzle schema (`agents` / `agent_versions` / `runs` /
-  `api_keys`), hosted Supabase, email magic-link auth with founder allowlist (`lib/auth.ts`),
-  `/login` + `/studio` shell (`app/studio/`). RLS enabled (no policies) on all tables.
-- **Not built yet:** the `accounts` wrapper table, Privy wallets, `job_policies` + clamp trigger, and
-  the actual agent create → draft → publish flow. The schema below is the target; code has not caught
-  up to the Privy/accounts/job_policies additions.
+- **Studio:** done. Create (form + Gemini "Describe" mode), `skill_md` + structured columns, publish
+  (draft→published, immutable), versioning + edit, admin allowlist (`studio_access`) + public `/apply`
+  + `access_requests` review at `/studio/admin`. Auth: Supabase magic-link, `STUDIO_ALLOWLIST` env =
+  admin bootstrap. RLS on all tables.
+- **Runner:** working (`lib/runner/`). Gemini tool-calling loop, one real tool (`fetch_url`), hard
+  cost-cap counter + `max_iterations` guard, writes a `runs` row every time. Exercised via a Test-run
+  panel on the agent page. Not yet wired to Connect.
+- **Not built:** Privy wallets + signing-layer policy, `job_policies` + clamp trigger (moves to
+  Connect), `api_keys` rename + Connect REST/MCP, the adversarial test pass.
 
 ## What Flawk is
 

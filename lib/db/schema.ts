@@ -128,6 +128,8 @@ export const runs = pgTable("runs", {
     .notNull()
     .default(sql`'[]'::jsonb`),
   success: boolean("success"),
+  // "completed" | "cost_cap" | "max_iterations" | "error"
+  stopReason: text("stop_reason"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

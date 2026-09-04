@@ -1,10 +1,56 @@
-import type { AgentDraft, LlmProvider } from "./types";
+import type {
+  AgentDraft,
+  LlmChatResult,
+  LlmProvider,
+  LlmTurn,
+  ToolSpec,
+} from "./types";
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 const endpoint = (model: string) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-const SYSTEM = `You design agents for Flawk, a platform for single-task autonomous AI agents.
+// Rough flash-tier pricing (USD per 1M tokens). The runner's cost counter only
+// needs a monotonic estimate; override via env if it matters.
+const PRICING = {
+  inputPer1M: Number(process.env.GEMINI_PRICE_INPUT || 0.3),
+  outputPer1M: Number(process.env.GEMINI_PRICE_OUTPUT || 2.5),
+};
+
+/* -------------------------- shared request helper -------------------------- */
+
+async function callGemini(
+  apiKey: string,
+  body: unknown,
+): Promise<Record<string, unknown>> {
+  const payload = JSON.stringify(body);
+  let res: Response | undefined;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    res = await fetch(endpoint(MODEL), {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+      body: payload,
+    });
+    if (res.ok) break;
+    if (res.status !== 429 && res.status !== 503) break;
+    await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+  }
+
+  if (!res || !res.ok) {
+    const text = res ? await res.text() : "no response";
+    const status = res?.status ?? 0;
+    if (status === 429 || status === 503) {
+      throw new Error("Gemini is busy right now — try again in a moment.");
+    }
+    throw new Error(`Gemini request failed (${status}). ${text.slice(0, 300)}`);
+  }
+  return res.json();
+}
+
+/* ------------------------------ draftAgent -------------------------------- */
+
+const DRAFT_SYSTEM = `You design agents for Flawk, a platform for single-task autonomous AI agents.
 Given a short description, produce ONE agent definition.
 
 Guidance:
@@ -18,7 +64,7 @@ Guidance:
 - costCapPerTask: USD hard limit for a single run. Must be > 0 and >= pricePerTask. Keep it tight, usually 0.01 to 2.
 - Phase 1 reality: one task per call, triggered by a human. No agent-to-agent hiring, no autonomous payments, no orchestrating other agents.`;
 
-const responseSchema = {
+const draftSchema = {
   type: "object",
   properties: {
     name: { type: "string" },
@@ -52,11 +98,9 @@ const responseSchema = {
   ],
 };
 
-function normalize(raw: Partial<AgentDraft>): AgentDraft {
+function normalizeDraft(raw: Partial<AgentDraft>): AgentDraft {
   const arr = (x: unknown) =>
-    Array.isArray(x)
-      ? x.map((s) => String(s).trim()).filter(Boolean)
-      : [];
+    Array.isArray(x) ? x.map((s) => String(s).trim()).filter(Boolean) : [];
   const num = (x: unknown) => {
     const n = Number(x);
     return Number.isFinite(n) && n >= 0 ? n : 0;
@@ -68,7 +112,9 @@ function normalize(raw: Partial<AgentDraft>): AgentDraft {
   if (cap < price) cap = price;
 
   return {
-    name: String(raw.name ?? "Untitled agent").trim().slice(0, 60),
+    name: String(raw.name ?? "Untitled agent")
+      .trim()
+      .slice(0, 60),
     purpose: String(raw.purpose ?? "").trim(),
     can: arr(raw.can),
     cannot: arr(raw.cannot),
@@ -79,61 +125,136 @@ function normalize(raw: Partial<AgentDraft>): AgentDraft {
   };
 }
 
+/* -------------------------------- chat ---------------------------------- */
+
+function turnsToContents(turns: LlmTurn[]) {
+  return turns.map((t) => {
+    if (t.role === "user") {
+      return { role: "user", parts: [{ text: t.text }] };
+    }
+    if (t.role === "tool") {
+      return {
+        role: "user",
+        parts: [
+          {
+            functionResponse: {
+              name: t.name,
+              response: { result: t.response },
+            },
+          },
+        ],
+      };
+    }
+    // model
+    const parts: Record<string, unknown>[] = [];
+    if (t.text) parts.push({ text: t.text });
+    for (const call of t.toolCalls ?? []) {
+      const part: Record<string, unknown> = {
+        functionCall: { name: call.name, args: call.args },
+      };
+      if (call.thoughtSignature) part.thoughtSignature = call.thoughtSignature;
+      parts.push(part);
+    }
+    return { role: "model", parts };
+  });
+}
+
+function parseChatResponse(data: Record<string, unknown>): LlmChatResult {
+  const candidate = (data.candidates as unknown[])?.[0] as
+    | Record<string, unknown>
+    | undefined;
+  const parts =
+    ((candidate?.content as Record<string, unknown>)?.parts as unknown[]) ?? [];
+
+  let text: string | null = null;
+  const toolCalls: LlmChatResult["toolCalls"] = [];
+  for (const part of parts as Record<string, unknown>[]) {
+    if (typeof part.text === "string") {
+      text = (text ?? "") + part.text;
+    }
+    if (part.functionCall) {
+      const fc = part.functionCall as { name: string; args?: unknown };
+      const sig = (part.thoughtSignature ?? part.thought_signature) as
+        | string
+        | undefined;
+      toolCalls.push({
+        name: fc.name,
+        args: (fc.args as Record<string, unknown>) ?? {},
+        ...(sig ? { thoughtSignature: sig } : {}),
+      });
+    }
+  }
+
+  const usage = (data.usageMetadata as Record<string, number>) ?? {};
+  return {
+    text,
+    toolCalls,
+    usage: {
+      inputTokens: usage.promptTokenCount ?? 0,
+      outputTokens: usage.candidatesTokenCount ?? 0,
+    },
+  };
+}
+
+/* ------------------------------ provider -------------------------------- */
+
 export function createGemini(apiKey: string | undefined): LlmProvider {
   return {
     available: Boolean(apiKey),
+    pricing: PRICING,
 
     async draftAgent(description: string): Promise<AgentDraft> {
       if (!apiKey) throw new Error("GEMINI_API_KEY is not set.");
-
-      const body = JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM }] },
+      const data = await callGemini(apiKey, {
+        systemInstruction: { parts: [{ text: DRAFT_SYSTEM }] },
         contents: [{ role: "user", parts: [{ text: description }] }],
         generationConfig: {
           responseMimeType: "application/json",
-          responseSchema,
+          responseSchema: draftSchema,
           temperature: 0.4,
         },
       });
-
-      let res: Response | undefined;
-      for (let attempt = 0; attempt < 3; attempt++) {
-        res = await fetch(endpoint(MODEL), {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body,
-        });
-        if (res.ok) break;
-        if (res.status !== 429 && res.status !== 503) break;
-        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
-      }
-
-      if (!res || !res.ok) {
-        const text = res ? await res.text() : "no response";
-        const status = res?.status ?? 0;
-        if (status === 429 || status === 503) {
-          throw new Error("Gemini is busy right now — try again in a moment.");
-        }
-        throw new Error(
-          `Gemini request failed (${status}). ${text.slice(0, 300)}`,
-        );
-      }
-
-      const data = await res.json();
-      const text: string | undefined =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const text = (
+        (
+          (data.candidates as Record<string, unknown>[])?.[0]
+            ?.content as Record<string, unknown>
+        )?.parts as Record<string, unknown>[]
+      )?.[0]?.text as string | undefined;
       if (!text) throw new Error("Gemini returned no content.");
-
-      let parsed: Partial<AgentDraft>;
       try {
-        parsed = JSON.parse(text);
+        return normalizeDraft(JSON.parse(text));
       } catch {
         throw new Error("Gemini returned malformed JSON.");
       }
-      return normalize(parsed);
+    },
+
+    async chat({
+      system,
+      turns,
+      tools,
+    }: {
+      system: string;
+      turns: LlmTurn[];
+      tools?: ToolSpec[];
+    }): Promise<LlmChatResult> {
+      if (!apiKey) throw new Error("GEMINI_API_KEY is not set.");
+      const body: Record<string, unknown> = {
+        systemInstruction: { parts: [{ text: system }] },
+        contents: turnsToContents(turns),
+        generationConfig: { temperature: 0.2 },
+      };
+      if (tools && tools.length) {
+        body.tools = [
+          {
+            functionDeclarations: tools.map((t) => ({
+              name: t.name,
+              description: t.description,
+              parameters: t.parameters,
+            })),
+          },
+        ];
+      }
+      return parseChatResponse(await callGemini(apiKey, body));
     },
   };
 }
