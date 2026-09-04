@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { requireStudioAuth } from "@/lib/auth";
+import { getOrCreateAccount } from "@/lib/accounts";
 import { db } from "@/lib/db";
 import { agents } from "@/lib/db/schema";
 
@@ -9,12 +10,16 @@ export const metadata = { title: "Your agents — Flawk Studio" };
 export default async function StudioHome() {
   const { user, hasAccess } = await requireStudioAuth();
   if (!hasAccess) return null;
+  const account = await getOrCreateAccount(user);
 
   const rows = await db.query.agents.findMany({
-    where: eq(agents.creatorId, user.id),
+    where: eq(agents.creatorId, account.id),
     orderBy: desc(agents.createdAt),
     with: {
-      versions: { columns: { version: true, status: true, name: true } },
+      versions: {
+        columns: { version: true, status: true, name: true, createdAt: true },
+        orderBy: (v, { asc }) => asc(v.createdAt),
+      },
     },
   });
 

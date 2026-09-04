@@ -7,7 +7,7 @@ export default async function StudioLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, hasAccess } = await requireStudioAuth();
+  const { user, hasAccess, admin } = await requireStudioAuth();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -27,6 +27,14 @@ export default async function StudioLayout({
           </Link>
 
           <div className="flex items-center gap-4 text-sm">
+            {admin && (
+              <Link
+                href="/studio/admin"
+                className="font-medium text-muted transition-colors hover:text-foreground"
+              >
+                Admin
+              </Link>
+            )}
             <span className="hidden text-muted sm:inline">{user.email}</span>
             <form action="/auth/sign-out" method="post">
               <button
@@ -51,21 +59,29 @@ function NoAccess({ email }: { email: string }) {
   return (
     <div className="mx-auto mt-10 max-w-md squircle border border-border bg-surface p-8 text-center">
       <h1 className="text-xl font-semibold tracking-tight">
-        You&rsquo;re on the list, not the allowlist
+        You&rsquo;re signed in, not allowlisted
       </h1>
       <p className="mt-3 text-sm leading-relaxed text-muted">
-        <span className="font-medium text-foreground">{email}</span> is signed in
-        but doesn&rsquo;t have Studio access yet. Studio is founder-only while the
-        creation flow is being hardened.
+        <span className="font-medium text-foreground">{email}</span> doesn&rsquo;t
+        have Studio access yet. Studio is invite-only while the creation flow is
+        being hardened.
       </p>
-      <form action="/auth/sign-out" method="post" className="mt-6">
-        <button
-          type="submit"
-          className="squircle-sm border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <Link
+          href="/apply"
+          className="squircle-sm bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
         >
-          Sign out
-        </button>
-      </form>
+          Apply for access
+        </Link>
+        <form action="/auth/sign-out" method="post">
+          <button
+            type="submit"
+            className="squircle-sm border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

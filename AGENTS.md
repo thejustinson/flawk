@@ -205,8 +205,10 @@ employer's job spend beyond the creator's real ceiling.
 
 ## Decisions made (2026-09)
 
-- **Studio auth:** founder-only. Real Supabase Auth (email magic-link); Studio access gated by the
-  `STUDIO_ALLOWLIST` env var. Open signup / invites are a later concern.
+- **Studio auth:** invite-only. Real Supabase Auth (email magic-link). `STUDIO_ALLOWLIST` env is the
+  bootstrap admin list — those emails are always allowed and are the only ones who can reach
+  `/studio/admin`. Everyone else is granted via the `studio_access` table from the admin dashboard.
+  `/apply` is a public form that files an `access_requests` row for an admin to approve.
 - **App structure:** one Next.js app — landing (`/`), Studio (`/studio`), and Connect share a codebase
   and deployment. Split the runner into its own service only if long tool-loops require it.
 - **DB access:** hosted Supabase + Drizzle ORM.

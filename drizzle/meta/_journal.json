@@ -22,6 +22,20 @@
       "when": 1788408570778,
       "tag": "0002_skinny_piledriver",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788437656652,
+      "tag": "0003_narrow_bloodaxe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788509807891,
+      "tag": "0004_drop_orphan_profiles_trigger",
+      "breakpoints": true
     }
   ]
 }

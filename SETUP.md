@@ -23,7 +23,8 @@ Fill in:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Settings → API → anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Settings → API → service_role key |
 | `DATABASE_URL` | Settings → Database → Session pooler URI (with your password) |
-| `STUDIO_ALLOWLIST` | your email, comma-separated for more |
+| `STUDIO_ALLOWLIST` | admin emails (comma-separated). These get Studio + `/studio/admin`. Others are granted from the admin dashboard. |
+| `GEMINI_API_KEY` | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) — powers Studio's Describe mode (and later the runner) |
 
 ## 3. Database schema
 
@@ -41,8 +42,10 @@ npm run dev
 ```
 
 - `/` — landing page (no auth)
+- `/apply` — public form to request Studio access
 - `/login` — email sign-in link
 - `/studio` — requires an allowlisted email
+- `/studio/admin` — allowlist + request review (admins only, i.e. `STUDIO_ALLOWLIST`)
 
 If your email isn't in `STUDIO_ALLOWLIST`, you'll sign in fine but land on a
 "no access" screen — add the address and restart `next dev`.

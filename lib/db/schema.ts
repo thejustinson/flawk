@@ -154,6 +154,42 @@ export const apiKeys = pgTable("api_keys", {
 // NOTE: `job_policies` (employer-set permission narrowing + the clamp trigger)
 // lands with the agent runner slice, where it's first consumed. Not added yet.
 
+export const accessRequestStatus = pgEnum("access_request_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+/**
+ * Studio access grants. Email-keyed so someone can be granted before they've
+ * ever signed in. The `STUDIO_ALLOWLIST` env list is the bootstrap admin set and
+ * is layered on top of this table — admins are always allowed and are the only
+ * ones who can reach /studio/admin.
+ */
+export const studioAccess = pgTable("studio_access", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  grantedBy: uuid("granted_by"), // account id; null = env bootstrap
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS();
+
+/** Applications for Studio access, reviewed from /studio/admin. */
+export const accessRequests = pgTable("access_requests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  intent: text("intent").notNull(),
+  status: accessRequestStatus("status").notNull().default("pending"),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  reviewedBy: uuid("reviewed_by"),
+}).enableRLS();
+
 export const accountsRelations = relations(accounts, ({ many }) => ({
   agents: many(agents),
 }));
@@ -190,4 +226,8 @@ export type Account = typeof accounts.$inferSelect;
 export type Agent = typeof agents.$inferSelect;
 export type AgentVersion = typeof agentVersions.$inferSelect;
 export type Run = typeof runs.$inferSelect;
+export type StudioAccess = typeof studioAccess.$inferSelect;
+export type AccessRequest = typeof accessRequests.$inferSelect;
 export type VersionStatus = (typeof versionStatus.enumValues)[number];
+export type AccessRequestStatus =
+  (typeof accessRequestStatus.enumValues)[number];

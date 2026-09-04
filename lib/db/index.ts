@@ -6,39 +6,32 @@ type DB = PostgresJsDatabase<typeof schema>;
 
 const globalForDb = globalThis as unknown as {
   __flawkDbClient?: ReturnType<typeof postgres>;
-  __flawkDb?: DB;
 };
 
-function init(): DB {
-  if (globalForDb.__flawkDb) return globalForDb.__flawkDb;
-
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error(
-      "DATABASE_URL is not set. Copy .env.example to .env.local and fill it in.",
-    );
-  }
-
+function connect(connectionString: string): DB {
   const client =
-    globalForDb.__flawkDbClient ?? postgres(connectionString, { prepare: false });
-
-  const instance = drizzle(client, { schema });
+    globalForDb.__flawkDbClient ??
+    postgres(connectionString, { prepare: false });
 
   if (process.env.NODE_ENV !== "production") {
     globalForDb.__flawkDbClient = client;
-    globalForDb.__flawkDb = instance;
   }
-  return instance;
+  return drizzle(client, { schema });
 }
 
+const connectionString = process.env.DATABASE_URL;
+
 /**
- * Lazily-initialized Drizzle client. Connecting is deferred until first use so
- * `next build` can import route modules without DATABASE_URL being present.
+ * Real Drizzle client when DATABASE_URL is present (dev, prod). Without it —
+ * e.g. `next build` in a bare environment — `db` is a stand-in that throws only
+ * when actually used, so importing route modules doesn't fail.
  */
-export const db = new Proxy({} as DB, {
-  get(_target, prop, receiver) {
-    const instance = init();
-    const value = Reflect.get(instance, prop, receiver);
-    return typeof value === "function" ? value.bind(instance) : value;
-  },
-});
+export const db: DB = connectionString
+  ? connect(connectionString)
+  : (new Proxy({} as DB, {
+      get() {
+        throw new Error(
+          "DATABASE_URL is not set. Copy .env.example to .env.local and fill it in.",
+        );
+      },
+    }) as DB);
